@@ -1,0 +1,47 @@
+-- Active: 1719759634989@@127.0.0.1@3306@turnero
+
+CREATE TABLE user_groups (
+    id INT PRIMARY KEY,
+    group_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE user (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_group_id INT,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_group_id) REFERENCES user_groups (id) ON DELETE SET NULL
+);
+
+CREATE TABLE profesionales (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    nombre VARCHAR(255) NOT NULL,
+    apellido VARCHAR(255) NOT NULL,
+    especialidad VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE
+);
+
+CREATE TABLE turnos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    profesional_id INT,
+    user_id INT,
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
+    estado ENUM(
+        'pendiente',
+        'confirmado',
+        'cancelado'
+    ) DEFAULT 'pendiente',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (profesional_id) REFERENCES profesionales (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE
+);

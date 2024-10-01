@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Asegura que todas las solicitudes dentro de 'todo-app/backend' se redirijan a 'public'
+RewriteBase /turnero/
+
+# Redirige todo a la carpeta public, actualizando la barra de direcciones
+RewriteCond %{REQUEST_URI} !^/turnero/public/
+RewriteRule ^(.*)$ public/$1 [L]
